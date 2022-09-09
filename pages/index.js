@@ -96,10 +96,13 @@ export default function Home() {
           <input
             type="password"
             placeholder="password"
-            // value={user?.password}
+            value={user?.password}
             // pattern="^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$"
             required
             className="w-1/2 block form-input px-4 py-3 rounded-lg" />
+          <span className="text-gray-500 text-14">
+            Minimum of 6 characters, with upper & lower case, a number and a symbol.
+          </span>
         </div>
 
         <div className="justify-between flex">
@@ -124,7 +127,7 @@ export default function Home() {
 
       </form>
 
-      <div className="text-center cursor-pointer" onClick={() => setUsers([])}>
+      <div className="text-center cursor-pointer text-red-500 font-medium" onClick={() => setUsers([])}>
         Clear All List User
       </div>
       {
