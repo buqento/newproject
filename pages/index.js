@@ -12,6 +12,7 @@ export default function Home() {
   const [picture, setPicture] = useState("")
   const [password, setPassword] = useState("")
   const [address, setAddress] = useState("")
+  const [keyword, setKeyword] = useState("")
 
   const getUsers = async () => {
     try {
@@ -35,6 +36,11 @@ export default function Home() {
 
   const addNewUser = user => {
     setUsers([user, ...users])
+  }
+
+  const setSearchResult = () => {
+    const searchResult = users?.filter(item => item.fullName?.toLowerCase().includes(keyword.toLowerCase()))
+    setUsers(searchResult)
   }
 
   return (
@@ -147,6 +153,23 @@ export default function Home() {
       <div className="text-center cursor-pointer text-red-500 font-medium" onClick={() => setUsers([])}>
         Clear All List User
       </div>
+
+      <div>
+        <input
+          onChange={e => setKeyword(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === "Enter" && keyword) {
+              setSearchResult()
+            }
+          }}
+          maxLength={255}
+          type="search"
+          value={keyword}
+          placeholder="Search Anything"
+          className='w-2/5 outline-none form-input px-4 py-3 rounded-lg'
+        />
+      </div>
+
       {
         !users.length >= 1 &&
         <div className="flex items-center justify-center">
