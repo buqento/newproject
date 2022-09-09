@@ -4,17 +4,21 @@ import Image from "next/image";
 
 export default function Home() {
 
-  const [user, setUser] = useState()
-
   const [users, setUsers] = useState([])
+  const [fullName, setFullName] = useState("")
+  const [emailAddress, setEmailAddress] = useState("")
+  const [dOB, setDob] = useState("")
+  const [phone, setPhone] = useState("")
+  const [picture, setPicture] = useState("")
+  const [password, setPassword] = useState("")
+  const [address, setAddress] = useState("")
 
   const getUsers = async () => {
-    setUser({})
     try {
       const res = await fetch(`https://randomuser.me/api`)
       const user = await res.json()
       const userdata = user.results[0]
-      setUser({
+      setUsers([{
         firstName: userdata?.name.first,
         fullName: `${userdata?.name.title}. ${userdata?.name.first} ${userdata?.name.last}`,
         emailAddress: userdata?.email,
@@ -23,18 +27,14 @@ export default function Home() {
         password: userdata?.login.password,
         picture: userdata?.picture.medium,
         location: userdata?.location
-      })
+      }, ...users])
     } catch (error) {
       console.error(error);
     }
   }
 
-  const addNewUser = (event) => {
-    event.preventDefault()
+  const addNewUser = user => {
     setUsers([user, ...users])
-    if (user) {
-      users.push(user)
-    }
   }
 
   return (
@@ -56,7 +56,7 @@ export default function Home() {
           <input
             type="text"
             placeholder="Your Name"
-            value={user?.fullName}
+            onChange={e => setFullName(e.target.value)}
             maxLength={50}
             className="w-1/2 block form-input px-4 py-3 rounded-lg" />
         </div>
@@ -65,13 +65,14 @@ export default function Home() {
           <input
             type="email"
             placeholder="yourmail@mail.com"
-            value={user?.emailAddress}
+            onChange={e => setEmailAddress(e.target.value)}
             className="w-1/2 block form-input px-4 py-3 rounded-lg" />
         </div>
         <div>
           <label>Date of Birth</label>
           <input
             type="date"
+            onChange={e => setDob(e.target.value)}
             className="w-1/2 block form-input px-4 py-3 rounded-lg" />
         </div>
         <div>
@@ -79,6 +80,7 @@ export default function Home() {
           <input
             type="text"
             placeholder="Street Address"
+            onChange={e => setAddress(e.target.value)}
             maxLength={255}
             className="w-full block form-input px-4 py-3 rounded-lg" />
         </div>
@@ -88,7 +90,7 @@ export default function Home() {
             type="text"
             pattern="[+62][0-9]{13}"
             placeholder="e.g +6285243322433"
-            // value={user?.phone}
+            onChange={e => setPhone(e.target.value)}
             className="w-1/2 block form-input px-4 py-3 rounded-lg" />
         </div>
         <div>
@@ -96,7 +98,7 @@ export default function Home() {
           <input
             type="password"
             placeholder="password"
-            value={user?.password}
+            onChange={e => setPassword(e.target.value)}
             // pattern="^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$"
             required
             className="w-1/2 block form-input px-4 py-3 rounded-lg" />
@@ -113,7 +115,22 @@ export default function Home() {
               Cancel
             </button>
             <button
-              onClick={addNewUser}
+              onClick={(e) => {
+                e.preventDefault()
+                addNewUser({
+                  firstName: fullName,
+                  fullName,
+                  emailAddress,
+                  dOB,
+                  phone,
+                  password,
+                  picture,
+                  phone,
+                  location: {
+                    city: address
+                  }
+                })
+              }}
               className="font-medium px-16 py-8 rounded-lg border border-gray-300 bg-indigo-600 text-white">
               Submit
             </button>
